@@ -14,6 +14,16 @@ const taskSchema = new mongoose.Schema({
 	complete: { type: String, default: null },
 });
 
+taskSchema.pre("save", function (next) {
+	if (this.time === null) {
+		this.time = getDueTime();
+	}
+	if (this.complete === null) {
+		this.complete = null; // 你可以按需要修改这里的默认值
+	}
+	next();
+});
+
 let taskModel = mongoose.model("todolist", taskSchema);
 
 module.exports = taskModel;
