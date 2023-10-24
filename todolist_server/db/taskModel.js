@@ -3,14 +3,14 @@ const moment = require("moment");
 
 const getDueTime = () => {
 	const now = moment();
-	const defaultDueTime = now.add(1, "day").format("YYYY-MM-DD HH:mm:ss");
+	const defaultDueTime = now.add(1, "day").toDate();
 	return defaultDueTime;
 };
 
 const taskSchema = new mongoose.Schema({
 	task: { type: String, required: true },
 	isDone: { type: Boolean, required: true, default: false },
-	time: { type: String, default: getDueTime() },
+	time: { type: Date, default: getDueTime() },
 	complete: { type: String, default: null },
 });
 

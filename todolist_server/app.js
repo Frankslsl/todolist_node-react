@@ -26,11 +26,13 @@ dbConnection(
 		const getAll = require("./routes/getAll");
 		const deleteById = require("./routes/deleteById");
 		const getById = require("./routes/getById");
+		const updateById = require("./routes/updateById");
 
 		app.use("/tasks", insert);
 		app.use("/tasks", getAll);
 		app.use("/tasks", deleteById);
 		app.use("/tasks", getById);
+		app.use("/tasks", updateById);
 	},
 	() => {
 		// catch 404 and forward to error handler
