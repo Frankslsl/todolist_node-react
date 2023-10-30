@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 dbConnection = function (success, error) {
 	// mongoose.connect("mongodb://20.14.93.178");
-	mongoose.connect("mongodb://root:wodediannao@192.168.137.135:27017/test");
+	mongoose.connect("mongodb://20.14.93.178:27017/test");
 
 	mongoose.connection.once("open", () => {
 		console.log("mongodb");
