@@ -1,7 +1,7 @@
 import { action } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
-import "./index.less";
+import React, { useState, useEffect } from "react";
+import "./index.css";
 import { Button, Popconfirm, Table, Tag } from "antd";
 import axios from "axios";
 import moment from "moment";
@@ -11,10 +11,20 @@ function Task() {
 	const list = useSelector((state) => state.task.taskList);
 	const [color, setColor] = useState("All");
 	const [isLoading, setIsLoading] = useState(false);
-	const [formData, setFormData] = useState(list);
-	const { remove, update } = action.task;
+	const [formData, setFormData] = useState([]);
+	const { queryAllList, remove, update } = action.task;
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (!list) {
+			const result = dispatch(queryAllList());
+		}
+	}, [dispatch, queryAllList]);
+
+	//每次list改变,要重新赋值给formData
+	useEffect(() => {
+		setFormData(() => list);
+	}, [list]);
 	//* functions
 	const handleTagClick = (e) => {
 		setColor(() => e.target.textContent);
@@ -28,27 +38,31 @@ function Task() {
 	};
 
 	const handleDelete = function (id) {
-		setIsLoading(true);
-		try {
-			dispatch(remove);
-		} catch (error) {
-			console.log("something went wrong when deleting", error);
-			setIsLoading(false);
-		} finally {
-			setIsLoading(false);
-		}
+		return () => {
+			setIsLoading(true);
+			try {
+				dispatch(remove(id));
+			} catch (error) {
+				console.log("something went wrong when deleting", error);
+				setIsLoading(false);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 	};
 
 	const handleFinish = function (id) {
-		setIsLoading(true);
-		try {
-			dispatch(update);
-		} catch (error) {
-			console.error("something went wrong when updateing", error);
-			setIsLoading(false);
-		} finally {
-			setIsLoading(false);
-		}
+		return () => {
+			setIsLoading(true);
+			try {
+				dispatch(update(id));
+			} catch (error) {
+				console.error("something went wrong when updateing", error);
+				setIsLoading(false);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 	};
 
 	//TODO define the columns for the table

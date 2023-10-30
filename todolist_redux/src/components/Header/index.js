@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Button, DatePicker, Form, Input, Modal } from "antd";
 import moment from "moment";
-import axios from "axios";
+import { action } from "../../store/actions";
+import { useDispatch } from "react-redux";
 
-import "./index.less";
+import "./index.css";
 import { useForm } from "antd/es/form/Form";
 const { TextArea } = Input;
 
 function Header() {
+	const { insert } = action.task;
+	const dispatch = useDispatch();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	//使用hook函数来创建表单实例,来操作表单
@@ -31,23 +34,10 @@ function Header() {
 		try {
 			const values = await form.validateFields();
 			console.log(form.getFieldsValue(true));
-			// const { task, time } = form.getFieldsValue(true);
-			// let data;
 
-			console.log(moment.isMoment(values.time));
-			const data = { ...values, time: values.time.toDate() };
-			// if (time != null && moment.isMoment(time)) {
-			// 	const timeString = time.format("YYYY-MM-DD HH:mm:ss");
-			// 	data = { task, time: timeString };
-			// } else {
-			// 	data = { task, time: null };
-			// }
-			const insertTask = await axios({
-				method: "post",
-				url: "http://localhost:9000/tasks",
-				data,
-			});
-			props.handleActive();
+			const data = { ...values, time: values.time.$d };
+
+			dispatch(insert(data));
 			setIsModalOpen(() => {
 				return false;
 			});
@@ -58,7 +48,15 @@ function Header() {
 		} catch (error) {
 			console.log(error);
 			setIsLoading(false);
-			return;
+			setIsLoading(() => {
+				return false;
+			});
+			form.resetFields();
+		} finally {
+			setIsLoading(() => {
+				return false;
+			});
+			form.resetFields();
 		}
 	};
 

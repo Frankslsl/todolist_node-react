@@ -3,24 +3,28 @@ import moment from "moment";
 import _ from "lodash";
 
 const initial = {
-	taskList: [],
+	taskList: null,
 };
 export default function taskReducer(state = initial, action) {
 	console.log("Action received:", action);
 	// let nextState = _.clone(true, state);
 	let nextState = _.cloneDeep(state);
+
 	switch (action.type) {
 		case TYPES.TASK_LIST:
 			nextState.taskList = action.list;
 			break;
 		case TYPES.TASK_REMOVE:
+			console.log(nextState);
+
 			nextState.taskList = _.filter(nextState.taskList, (item) => {
-				return item.id !== action.id;
+				return item._id !== action.id;
 			});
+			console.log(nextState);
 			break;
 		case TYPES.TASK_UPDATE:
 			nextState.taskList = _.map(nextState.taskList, (item) => {
-				if (+item.id === +action.id) {
+				if (item._id === action.id) {
 					return {
 						...item,
 						isDone: true,

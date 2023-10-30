@@ -1,8 +1,24 @@
+import { cloneElement } from "react";
 import * as TYPES from "../action-types";
 import axios from "axios";
 
 const taskAction = {
+	insert: (data) => {
+		return async (dispatch) => {
+			try {
+				const insertTask = await axios({
+					method: "post",
+					url: "http://localhost:9000/tasks",
+					data,
+				});
+				taskAction.queryAllList()(dispatch);
+			} catch (error) {
+				console.error("something went wrong when inserting", error);
+			}
+		};
+	},
 	queryAllList: () => {
+		console.log("first");
 		return async (dispatch) => {
 			try {
 				const result = await axios({
@@ -30,6 +46,7 @@ const taskAction = {
 		};
 	},
 	remove: (id) => {
+		console.log("removing");
 		return async (dispatch) => {
 			try {
 				const remove = await axios({

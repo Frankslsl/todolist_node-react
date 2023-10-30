@@ -9,7 +9,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import zhCN from "antd/locale/zh_CN";
 
-import "./index.less";
+import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<Provider store={store}>
